@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from client.models import City
 from .forms import UserRegisterForm, CityForm, AddressForm, UserEditForm
@@ -64,3 +64,22 @@ def edit_profile(request):
         formB = CityForm(instance=request.user.address.city)
         formC = AddressForm(instance=request.user.address)
     return render(request, 'users/register.html', {'formA': formA, 'formB': formB, 'formC': formC})
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(
+                request, 'Your password was successfully changed!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'users/change_password.html', {
+        'form': form
+    })

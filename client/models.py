@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 
 class City(models.Model):
@@ -46,3 +47,19 @@ class Creditworthiness:
     contract_type =
     working_time =
 """
+
+
+class Account(models.Model):
+    account_number = models.CharField(max_length=26, unique=True, validators=[
+                                      RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_limit = models.CharField(max_length=5, validators=[RegexValidator(
+        regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
+    currency = models.CharField(max_length=3, validators=[RegexValidator(
+        regex='^[A-Z]{3}$', message='Bledna waluta', code='nomatch')])
+    is_active = models.CharField(max_length=1, validators=[RegexValidator(
+        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+    creation_date = models.DateTimeField(default=timezone.now)
+    account_type = models.CharField(max_length=1, validators=[RegexValidator(
+        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])

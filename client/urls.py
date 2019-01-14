@@ -1,6 +1,32 @@
-from django.urls import path
-from . import views
+from django.urls import path, re_path
+from . import views as client_views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('',
+         client_views.home,
+         name='home'),
+    path('request/',
+         client_views.request,
+         name='request'),
+    path('open_account/',
+         client_views.open_account,
+         name='open_account'),
+    path('open_credit_account/',
+         client_views.open_credit_account,
+         name='open_credit_account'),
+    path('open_saving_account/',
+         client_views.open_saving_account,
+         name='open_saving_account'),
+    re_path(r'^account/(?P<oid>[0-9]+)/$',
+            client_views.account,
+            name='account'),
+    re_path(r'^account/(?P<oid>[0-9]+)/make_transaction$',
+            client_views.make_transaction,
+            name='make_transaction'),
+    re_path(r'^account/(?P<oid>[0-9]+)/transaction_history$',
+            client_views.transaction_history,
+            name='transaction_history'),
+    re_path(r'^account/(?P<oid>[0-9]+)/order_card$',
+            client_views.order_card,
+            name='order_card'),
 ]

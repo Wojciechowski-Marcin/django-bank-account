@@ -1,0 +1,18 @@
+{% extends "client/base.html" %}
+{% block content %}
+<h1>Account Info</h1>
+<h2>{{ account.account_number }}</h2>
+<h2>Card list</h2>
+
+<div class="form-group">
+    <a href="{% url 'transaction_history' oid=account.id %}" class="btn btn-default" type="button">
+        Transaction history
+    </a>
+    <a href="{% url 'make_transaction' oid=account.id %}" class="btn btn-default" type="button">
+        Make transaction
+    </a>
+    <a href="{% url 'order_card' oid=account.id %}" class="btn btn-default" type="button">
+        Order card
+    </a>
+</div>
+{% endblock %}

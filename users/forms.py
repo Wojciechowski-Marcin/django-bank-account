@@ -26,6 +26,8 @@ class UserEditForm(UserChangeForm):
 
 
 class CityForm(forms.ModelForm):
+    postal_code = forms.CharField(help_text='Postal code in format XX-XXX')
+
     class Meta:
         model = City
         fields = ['postal_code', 'city']

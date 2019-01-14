@@ -1,4 +1,48 @@
 {% extends "client/base.html" %}
 {% block content %}
-<h1>Client home page</h1>
-{% endblock %}
+<h1>Account List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Account number</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Currency</th>
+            <th scope="col">Account type</th>
+        </tr>
+    </thead>
+    {% for account in accounts %}
+    <tbody>
+        <tr>
+            <th scope="row">
+                <a class="navbar-link" href="{% url 'account' oid=account.id %}">
+                    {{ account.account_number }}
+                </a>
+            </th>
+            <td>{{ account.balance }}</td>
+            <td>{{ account.currency }}</td>
+            <td>
+                {% if account.account_type == '0' %}
+                Normal account
+                {% elif account.account_type == '1' %}
+                Saving account
+                {% else %}
+                Credit account
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if accounts|length < 5 %} <div class="form-group">
+    <a href="{% url 'open_account' %}" class="btn btn-default" type="button">
+        Open account
+    </a>
+    <a href="{% url 'open_credit_account' %}" class="btn btn-default" type="button">
+        Open credit account
+    </a>
+    <a href="{% url 'open_saving_account' %}" class="btn btn-default" type="button">
+        Open saving account
+    </a>
+    </div>
+    {% endif %}
+    {% endblock %}

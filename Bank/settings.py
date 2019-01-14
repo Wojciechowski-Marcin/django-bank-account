@@ -136,3 +136,30 @@ ALLOWED_HOSTS = ['192.168.0.104', '127.0.0.1']
 SITE_ID = 1
 
 FIXTURE_DIRS = ['client/fixtures/']
+
+LOGGING = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'handlers': {
+        'file': {
+            # logging handler that outputs log messages to terminal
+            'class': 'logging.FileHandler',
+            'level': 'DEBUG',  # message level to be written to console
+            'filename': 'logs.log',
+        },
+    },
+    'loggers': {
+        '': {
+            # this sets root level logger to log debug and higher level
+            # logs to console. All other loggers inherit settings from
+            # root level logger.
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,  # this tells logger to send logging message
+            # to its parent (will send if set to True)
+        },
+        'django.db': {
+            'level': 'DEBUG',
+        },
+    },
+}
