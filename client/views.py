@@ -34,6 +34,19 @@ def send_request(request):
 
 @login_required
 def open_account(request):
+    if request.method == 'POST':
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            accountform = form.save(commit=False)
+            accountform.transact
+            accountform.save()
+            messages.success(
+                request, 'Request was successfully sent!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = RequestForm()
     return render(request, 'client/open_account.html')
 
 

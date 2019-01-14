@@ -5,137 +5,139 @@ from django.utils import timezone
 
 
 class City(models.Model):
-    postal_code = models.CharField(max_length=6, validators=[RegexValidator(
-        regex='^\d{2}-{1}\d{3}$', message='Niewlasciwy kod pocztowy! Uzyj formatu XX-XXX.', code='nomatch')])
-    city = models.CharField(max_length=32)
+	postal_code = models.CharField(max_length=6, validators=[RegexValidator(
+		regex='^\d{2}-{1}\d{3}$', message='Niewlasciwy kod pocztowy! Uzyj formatu XX-XXX.', code='nomatch')])
+	city = models.CharField(max_length=32)
 
-    def __str__(self):
-        return self.postal_code + " " + self.city
+	def __str__(self):
+		return self.postal_code + " " + self.city
 
 
 class Address(models.Model):
-    street = models.CharField(max_length=64)
-    house_nr = models.IntegerField()
-    apartment_nr = models.IntegerField(null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
+	street = models.CharField(max_length=64)
+	house_nr = models.IntegerField()
+	apartment_nr = models.IntegerField(null=True, blank=True)
+	city = models.ForeignKey(City, on_delete=models.PROTECT)
 
-    def __str__(self):
-        return self.city.postal_code + " " + self.street + " " + str(self.house_nr) + " " + str(self.apartment_nr)
+	def __str__(self):
+		return self.city.postal_code + " " + self.street + " " + str(self.house_nr) + " " + str(self.apartment_nr)
 
 
 class Creditworthiness(models.Model):
-    JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                    ('uop', 'Umowa o prace na czas okreslony'),
-                    ('uod', 'Umowa o dzielo'),
-                    ('uz', 'Umowa Zlecenie'),
-                    ('ua', 'Umowa Agencyjna')]
-    earnings_per_month = models.IntegerField(blank=True, null=True)
-    contract_type = models.CharField(
-        blank=True, null=True, max_length=5, choices=JOBE_TYPE_CW)
-    working_time = models.IntegerField(blank=True, null=True)
+	JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
+					('uop', 'Umowa o prace na czas okreslony'),
+					('uod', 'Umowa o dzielo'),
+					('uz', 'Umowa Zlecenie'),
+					('ua', 'Umowa Agencyjna')]
+	earnings_per_month = models.IntegerField(blank=True, null=True)
+	contract_type = models.CharField(
+		blank=True, null=True, max_length=5, choices=JOBE_TYPE_CW)
+	working_time = models.IntegerField(blank=True, null=True)
 
 
-JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                ('uop', 'Umowa o prace na czas okreslony'),
-                ('uod', 'Umowa o dzielo'),
-                ('uz', 'Umowa Zlecenie'),
-                ('ua', 'Umowa Agencyjna')]
 
 
 class CustomUser(AbstractUser):
-    address = models.ForeignKey(Address, on_delete=models.PROTECT)
-    pesel = models.CharField(max_length=11, unique=True, validators=[RegexValidator(
-        regex='^\d{11}$', message='Niewlasciwy PESEL!', code='nomatch')])
-    mothers_maiden_name = models.CharField(max_length=32, blank=True, validators=[RegexValidator(
-        regex='^[a-zA-Z-]*$', message='Niewlasciwe nazwisko!', code='nomatch')])
-    birth_day = models.DateTimeField(help_text="Data w formacie dd/mm/yyyy")
-    telephone = models.CharField(max_length=9, unique=True, validators=[RegexValidator(
-        regex='^\d{9}$', message='Niewlasciwy numer telefonu', code='nomatch')])
-    creditworthiness = models.ForeignKey(
-        Creditworthiness, on_delete=models.PROTECT, blank=True, null=True)
+	address = models.ForeignKey(Address, on_delete=models.PROTECT)
+	pesel = models.CharField(max_length=11, unique=True, validators=[RegexValidator(
+		regex='^\d{11}$', message='Niewlasciwy PESEL!', code='nomatch')])
+	mothers_maiden_name = models.CharField(max_length=32, blank=True, validators=[RegexValidator(
+		regex='^[a-zA-Z-]*$', message='Niewlasciwe nazwisko!', code='nomatch')])
+	birth_day = models.DateTimeField(help_text="Data w formacie dd/mm/yyyy")
+	telephone = models.CharField(max_length=9, unique=True, validators=[RegexValidator(
+		regex='^\d{9}$', message='Niewlasciwy numer telefonu', code='nomatch')])
+	creditworthiness = models.ForeignKey(
+		Creditworthiness, on_delete=models.PROTECT, blank=True, null=True)
 
-    REQUIRED_FIELDS = ['email', 'first_name',
-                       'last_name', 'pesel', 'birth_day', 'telephone', 'address']
-    USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email', 'first_name',
+					   'last_name', 'pesel', 'birth_day', 'telephone', 'address']
+	USERNAME_FIELD = 'username'
 
-    def __str__(self):
-        return self.username
+	def __str__(self):
+		return self.username
 
 
 class Account(models.Model):
-    account_number = models.CharField(max_length=26, unique=True, validators=[
-                                      RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    transaction_limit = models.CharField(max_length=5, validators=[RegexValidator(
-        regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
-    currency = models.CharField(max_length=3, validators=[RegexValidator(
-        regex='^[A-Z]{3}$', message='Bledna waluta', code='nomatch')])
-    is_active = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
-    creation_date = models.DateTimeField(default=timezone.now)
-    account_type = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+	CURRENCIES_CHOICE = [
+        ('EUR', 'EUR'),
+        ('PLN', 'PLN'),
+        ('USD', 'USD'),
+        ('JPY', 'JPY'),
+        ('GBP', 'GBP'),
+        ('CHF', 'CHF'),
+        ('SAR', 'SAR'),
+        ('RUB', 'RUB'),
+        ('KRW', 'KRW')
+    ]
+
+	account_number = models.CharField(max_length=26, unique=True, validators=[
+									  RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
+	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+	balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+	transaction_limit = models.CharField(default=0, max_length=5, validators=[RegexValidator(
+		regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
+	currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICE)
+	is_active = models.CharField(default='1', max_length=1, validators=[RegexValidator(
+		regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+	creation_date = models.DateTimeField(default=timezone.now)
+	account_type = models.CharField(max_length=1, validators=[RegexValidator(
+		regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
 
 
 class Card(models.Model):
-    account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
-    card_number = models.CharField(max_length=16, primary_key=True, validators=[RegexValidator(
-        regex='\d{16}', message='Numer karty powinien skladac sie tylko i wylacznie z 16 cyfr', code='nomatch'
-    )])
-    cvv = models.CharField(max_length=3, validators=[RegexValidator(
-        regex='\d{3}', message='Number CVV sklada sie z 3 cyfr', code='nomatch'
-    )])
-    is_nfc = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0,1]{1}', message='Platnosc zblizeniowa musi byc w jednym z dwoch stanow: 1 - aktywna, 0 - nieaktywna', code='nomatch'
-    )])
-    is_active = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0,1]{1}', message='Karta musi byc w jednym z dwoch stanow: 1(aktywna) 0(nieaktywan', code='nomatch'
-    )])
-    transaction_limit = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0-9]{1,5}'
-    )])
+	account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
+	card_number = models.CharField(max_length=16, primary_key=True, validators=[RegexValidator(
+		regex='\d{16}', message='Numer karty powinien skladac sie tylko i wylacznie z 16 cyfr', code='nomatch'
+	)])
+	cvv = models.CharField(max_length=3, validators=[RegexValidator(
+		regex='\d{3}', message='Number CVV sklada sie z 3 cyfr', code='nomatch'
+	)])
+	is_nfc = models.CharField(max_length=1, validators=[RegexValidator(
+		regex='[0,1]{1}', message='Platnosc zblizeniowa musi byc w jednym z dwoch stanow: 1 - aktywna, 0 - nieaktywna', code='nomatch'
+	)])
+	is_active = models.CharField(max_length=1, validators=[RegexValidator(
+		regex='[0,1]{1}', message='Karta musi byc w jednym z dwoch stanow: 1(aktywna) 0(nieaktywan', code='nomatch'
+	)])
+	transaction_limit = models.CharField(max_length=1, validators=[RegexValidator(
+		regex='[0-9]{1,5}'
+	)])
 
 
 class TransactionHistory(models.Model):
-    source_bank_account = models.ForeignKey(
-        Account, on_delete=models.PROTECT, related_name='source_bank_account')
-    destination_bank_account = models.ForeignKey(
-        Account, on_delete=models.PROTECT, related_name='destination_bank_account')
-    transaction_id = models.CharField(max_length=9, primary_key=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    title = models.CharField(max_length=20)
-    send_date = models.DateTimeField(default=timezone.now)
+	source_bank_account = models.ForeignKey(
+		Account, on_delete=models.PROTECT, related_name='source_bank_account')
+	destination_bank_account = models.ForeignKey(
+		Account, on_delete=models.PROTECT, related_name='destination_bank_account')
+	transaction_id = models.CharField(max_length=9, primary_key=True)
+	amount = models.DecimalField(max_digits=10, decimal_places=2)
+	title = models.CharField(max_length=20)
+	send_date = models.DateTimeField(default=timezone.now)
 
 
 class Request(models.Model):
-    worker_data = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, null=True, blank=True, related_name='worker_data')
-    client_data = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, related_name='client_data')
-    request_text = models.TextField()
-    send_date = models.DateTimeField(default=timezone.now)
-    is_verified = models.CharField(max_length=1, default='0', validators=[RegexValidator(
-        regex='[0,1]', message='1 dla zweryfikowanego wniosku, 0 dla niezweryfikowanego'
-    )])
-    request_type = models.CharField(max_length=1, default='0', validators=[RegexValidator(
-        regex='[0,1]', message='0 bez kategorii, 1 wniosek o kredyt, 2 wniosek o karte kredytowa'
-    )])
+	worker_data = models.ForeignKey(
+		CustomUser, on_delete=models.PROTECT, null=True, blank=True, related_name='worker_data')
+	client_data = models.ForeignKey(
+		CustomUser, on_delete=models.PROTECT, related_name='client_data')
+	request_text = models.TextField()
+	send_date = models.DateTimeField(default=timezone.now)
+	is_verified = models.CharField(max_length=1, default='0', validators=[RegexValidator(
+		regex='[0,1]', message='1 dla zweryfikowanego wniosku, 0 dla niezweryfikowanego'
+	)])
+	request_type = models.CharField(max_length=1, default='0', validators=[RegexValidator(
+		regex='[0,1]', message='0 bez kategorii, 1 wniosek o kredyt, 2 wniosek o karte kredytowa'
+	)])
 
 
 class SavingAccount(models.Model):
-    saving_id = models.CharField(max_length=6, primary_key=True, validators=[
-                                 RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
-    account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
-    interest = models.DecimalField(max_digits=2, decimal_places=2)
-    period = models.CharField(max_length=3, validators=[RegexValidator(
-        regex='^\d{3}$', message='Bledny okres', code='nomatch')])
+	account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
+	interest = models.DecimalField(max_digits=2, decimal_places=2)
+	period = models.CharField(max_length=3, validators=[RegexValidator(
+		regex='^\d{3}$', message='Bledny okres', code='nomatch')])
 
 
 class CreditAccount(models.Model):
-    credit_id = models.CharField(max_length=6, primary_key=True, validators=[
-                                 RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
-    account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
-    interest2 = models.DecimalField(max_digits=2, decimal_places=2)
-    credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
-        regex='^\d{7}$', message='Bledna wartosc', code='nomatch')])
+	account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
+	interest2 = models.DecimalField(max_digits=2, decimal_places=2)
+	credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
+		regex='^\d{7}$', message='Bledna wartosc', code='nomatch')])
