@@ -25,3 +25,13 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ['street', 'house_nr', 'apartment_nr']
+
+class Request(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = ['request_text']
+
+class Card(forms.ModelForm):
+    class Meta:
+        model = Card
+        fields = ['cvv', 'transaction_limit', 'shipping_address']
