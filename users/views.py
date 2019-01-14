@@ -24,7 +24,7 @@ def register(request):
             a.address = c
             a.save()
             username = formA.cleaned_data.get('username')
-            messages.success(request, f'Successfully created account {username}!')
+            messages.success(request, 'Successfully created account!')
             return redirect('home')
     else:
         formA = UserRegisterForm()
@@ -57,8 +57,7 @@ def edit_profile(request):
             c.save()
             a.address = c
             a.save()
-            username = formA.cleaned_data.get('username')
-            messages.success(request, f'Successfully changed account {username}!')
+            messages.success(request, 'Successfully changed account!')
             return redirect('profile')
     else:
         formA = UserEditForm(instance=request.user)
