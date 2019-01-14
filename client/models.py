@@ -38,7 +38,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
+ 
 
 
 class Creditworthiness(models.Model):
@@ -50,7 +50,7 @@ class Creditworthiness(models.Model):
     working_time = models.IntegerField(max_length=3)
 
 class Card(models.Model):
-    account_number = models.ForeignKey(BankAccount, on_delete=models.PROTECT)
+    account_number = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
     card_number = models.CharField(max_length=16, primary_key=True, validators=[RegexValidator(
         regex='\d{16}', message='Numer karty powinien skladac sie tylko i wylacznie z 16 cyfr', code='nomatch'
     )])
