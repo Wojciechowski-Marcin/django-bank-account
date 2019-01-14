@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
-<<<<<<< HEAD
+<< << << < HEAD
 
-=======
->>>>>>> origin/MS
+== == == =
+>>>>>> > origin/MS
+
 
 class City(models.Model):
     postal_code = models.CharField(max_length=6, validators=[RegexValidator(
@@ -42,7 +43,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
- 
 
 
 class Creditworthiness(models.Model):
@@ -52,6 +52,7 @@ class Creditworthiness(models.Model):
         regex='[0-5]', message='0 - umowa o pracę na czas nieokreślony \n 1 - umowa o pracę na czas określony \n 2 - umowa o pracę na okres próbny \n 3 - umowa o dzieło 4 - umowa zlecenie 5 - umowa agencyjna'
     )])
     working_time = models.IntegerField(max_length=3)
+
 
 class Card(models.Model):
     account_number = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
@@ -71,21 +72,16 @@ class Card(models.Model):
         regex='[0-9]{1,5}'
     )])
 
+
 class TransactionHistory(models.Model):
-    source_bank_account = models.ForeignKey(BankAccount, on_delete=models.PROTECT)
-    destination_bank_account = models.ForeignKey(BankAccount, on_delete=models.PROTECT)
+    source_bank_account = models.ForeignKey(
+        BankAccount, on_delete=models.PROTECT)
+    destination_bank_account = models.ForeignKey(
+        BankAccount, on_delete=models.PROTECT)
     transaction_id = models.CharField(max_length=9, primary_key=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     title = models.CharField(max_length=20)
     send_date = models.DateTimeField(default=timezone.now)
-
-<<<<<<< HEAD
-"""
-class Creditworthiness:
-    earnings =
-    contract_type =
-    working_time =
-"""
 
 
 class Account(models.Model):
@@ -102,7 +98,8 @@ class Account(models.Model):
     creation_date = models.DateTimeField(default=timezone.now)
     account_type = models.CharField(max_length=1, validators=[RegexValidator(
         regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
-=======
+
+
 class Request(models.Model):
     request_id = models.CharField(max_length=6, primary_key=True)
     worker_data = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
@@ -110,9 +107,8 @@ class Request(models.Model):
     request_text = models.CharField(max_length=255)
     send_date = models.DateTimeField(default=timezone.now)
     is_verified = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0,1]', message = '1 dla zweryfikowanego wniosku, 0 dla niezweryfikowanego'
+        regex='[0,1]', message='1 dla zweryfikowanego wniosku, 0 dla niezweryfikowanego'
     )])
     request_type = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0,1]', message = '1 dla zweryfikowanego wniosku, 0 dla niezweryfikowanego'
+        regex='[0,1]', message='0 bez kategorii, 1 wniosek o kredyt, 2 wniosek o karte kredytowa'
     )])
->>>>>>> origin/MS
