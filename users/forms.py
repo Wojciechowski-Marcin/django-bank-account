@@ -3,6 +3,12 @@ from client.models import CustomUser, City, Address
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 import datetime
 
+JOBE_TYPE_CW = [ ('uopnt', 'Umowa o prace na czas nieokreslony'), 
+                ('uop', 'Umowa o prace na czas okreslony'), 
+                ('uod', 'Umowa o dzielo'),
+                ('uz', 'Umowa Zlecenie'),
+                ('ua', 'Umowa Agencyjna')]
+
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -37,3 +43,27 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ['street', 'house_nr', 'apartment_nr']
+
+class Request(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = ['request_text', 'type']
+
+class Card(forms.ModelForm):
+    class Meta:
+        model = Card
+        fields = ['cvv', 'transaction_limit', 'shipping_address']
+        #zmiana
+
+class Creditworthiness(forms.ModelForm):
+    class Meta:
+        model = Creditworthiness
+        fields = ['earnings_pre_month', 'working_time', 'contract_type']
+        contract_type = forms.CharField(label='Rodzaj umowy',
+        widget = forms.Select(choices=JOBE_TYPE_CW))
+
+class TransactionHistory(forms.ModelForm):
+    class Meta:
+        model = TransactionHistory
+        fields = ['Destination', 'Amount', 'Title', 'Address']
+    
