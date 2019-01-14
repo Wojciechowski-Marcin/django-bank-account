@@ -83,3 +83,38 @@ class TransactionHistoryForm(forms.ModelForm):
     class Meta:
         model = TransactionHistory
         fields = ['destination_bank_account', 'amount', 'title']
+
+
+class AccountForm(forms.ModelForm):
+    CURRENCIES_CHOICE = [
+        ('EUR', 'EUR'),
+        ('PLN', 'PLN'),
+        ('USD', 'USD'),
+        ('JPY', 'JPY'),
+        ('GBP', 'GBP'),
+        ('CHF', 'CHF'),
+        ('SAR', 'SAR'),
+        ('RUB', 'RUB'),
+        ('KRW', 'KRW')
+    ]
+    currency = models.CharField(
+        max_length=3,
+        choices=CURRENCIES_CHOICE,
+        blank=True
+    )
+
+    class Meta:
+        model = Account
+        fields = ['transaction_limit', 'currency']
+
+
+class SavingAccountForm(forms.ModelForm):
+    class Meta:
+        model = SavingAccount
+        fields = ['period']
+
+
+class CreditAccount(forms.ModelForm):
+    class Meta:
+        model = CreditAccount
+        fields = ['credit_limit']

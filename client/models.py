@@ -58,15 +58,26 @@ class CustomUser(AbstractUser):
 
 
 class Account(models.Model):
+    CURRENCIES_CHOICE = [
+        ('EUR', 'EUR'),
+        ('PLN', 'PLN'),
+        ('USD', 'USD'),
+        ('JPY', 'JPY'),
+        ('GBP', 'GBP'),
+        ('CHF', 'CHF'),
+        ('SAR', 'SAR'),
+        ('RUB', 'RUB'),
+        ('KRW', 'KRW')
+    ]
+
     account_number = models.CharField(max_length=26, unique=True, validators=[
-                                      RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
+        RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    transaction_limit = models.CharField(max_length=5, validators=[RegexValidator(
+    balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    transaction_limit = models.CharField(default=0, max_length=5, validators=[RegexValidator(
         regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
-    currency = models.CharField(max_length=3, validators=[RegexValidator(
-        regex='^[A-Z]{3}$', message='Bledna waluta', code='nomatch')])
-    is_active = models.CharField(max_length=1, validators=[RegexValidator(
+    currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICE)
+    is_active = models.CharField(default='1', max_length=1, validators=[RegexValidator(
         regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
     creation_date = models.DateTimeField(default=timezone.now)
     account_type = models.CharField(max_length=1, validators=[RegexValidator(
@@ -145,6 +156,6 @@ class SavingAccount(models.Model):
 
 class CreditAccount(models.Model):
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
-    interest2 = models.DecimalField(max_digits=2, decimal_places=2)
+    interest = models.DecimalField(max_digits=2, decimal_places=2)
     credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
         regex='^\d{7}$', message='Bledna wartosc', code='nomatch')])
