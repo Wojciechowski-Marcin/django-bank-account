@@ -35,3 +35,4 @@ class Card(forms.ModelForm):
     class Meta:
         model = Card
         fields = ['cvv', 'transaction_limit', 'shipping_address']
+        #zmiana
