@@ -128,3 +128,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
+
+ALLOWED_HOSTS = ['www.wojc-marcin.info.pl']
+ALLOWED_HOSTS = ['192.168.0.104', '127.0.0.1']

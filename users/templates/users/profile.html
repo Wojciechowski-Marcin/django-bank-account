@@ -1,4 +1,74 @@
 {% extends "client/base.html" %}
-{% block content %}
-<h1>{{ user.username }}</h1>
+{% block content %}<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <td>{{ user.username }}</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">First name</th>
+            <td>{{ user.first_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Last name</th>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">PESEL</th>
+            <td>{{ user.pesel }}</td>
+        </tr>
+        </tr>
+        <tr>
+            <th scope="row">Birth day</th>
+            <td>{{ user.birth_day }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Telephone</th>
+            <td>{{ user.telephone }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Email</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Mother's maiden name</th>
+            <td>
+                {% if user.mothers_maiden_name %}
+                {{ user.mothers_maiden_name }}
+                {% else %}
+                None
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Street</th>
+            <td>{{ user.address.street }}</td>
+        </tr>
+        <tr>
+            <th scope="row">House number</th>
+            <td>{{ user.address.house_nr }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Apartment number</th>
+            <td>{{ user.address.apartment_nr }}</td>
+        </tr>
+        <tr>
+            <th scope="row">City</th>
+            <td>{{ user.address.city.city }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Postal code</th>
+            <td>{{ user.address.city.postal_code }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Date joined</th>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="form-group">
+    <a href="{% url 'edit_profile' %}" class="btn btn-default" type="submit">Edit profile</a>
+</div>
 {% endblock content %}

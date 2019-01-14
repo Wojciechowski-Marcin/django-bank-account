@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 
 
 class City(models.Model):
-    postal_code = models.CharField(max_length=6, primary_key=True, validators=[RegexValidator(
+    postal_code = models.CharField(max_length=6, validators=[RegexValidator(
         regex='^\d{2}-{1}\d{3}$', message='Niewlasciwy kod pocztowy! Uzyj formatu XX-XXX.', code='nomatch')])
     city = models.CharField(max_length=32)
 
@@ -15,7 +15,7 @@ class City(models.Model):
 class Address(models.Model):
     street = models.CharField(max_length=64)
     house_nr = models.IntegerField()
-    apartment_nr = models.IntegerField(null=True)
+    apartment_nr = models.IntegerField(null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -23,8 +23,10 @@ class Address(models.Model):
 
 
 class CustomUser(AbstractUser):
+    first_name = models.CharField(max_length=30, verbose_name='first name'),
+    last_name = models.CharField(max_length=150, verbose_name='last name'),
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
-    pesel = models.CharField(max_length=11, validators=[RegexValidator(
+    pesel = models.CharField(max_length=11, unique=True, validators=[RegexValidator(
         regex='^\d{11}$', message='Niewlasciwy PESEL!', code='nomatch')])
     mothers_maiden_name = models.CharField(max_length=32, blank=True, validators=[RegexValidator(
         regex='^[a-zA-Z-]*$', message='Niewlasciwe nazwisko!', code='nomatch')])
