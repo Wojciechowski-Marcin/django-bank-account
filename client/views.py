@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from client.models import Account
+from client.models import *
+from users.forms import *
 
 
 @login_required
@@ -13,8 +15,21 @@ def home(request):
 
 
 @login_required
-def request(request):
-    return render(request, 'client/request.html')
+def send_request(request):
+    if request.method == 'POST':
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            requestform = form.save(commit=False)
+            requestform.client_data = request.user
+            requestform.save()
+            messages.success(
+                request, 'Request was successfully sent!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = RequestForm()
+    return render(request, 'client/send_request.html', {'form': form})
 
 
 @login_required

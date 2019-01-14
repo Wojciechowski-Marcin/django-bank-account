@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from client.models import City
-from .forms import UserRegisterForm, CityForm, AddressForm, UserEditForm
+from .forms import *
 
 
 def register(request):
@@ -81,5 +81,25 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'users/change_password.html', {
+        'form': form
+    })
+
+
+@login_required
+def creditworthiness(request):
+    if request.method == 'POST':
+        form = CreditworthinessForm(
+            request.user.creditworthiness, request.POST)
+        if form.is_valid():
+            creditworthinessform = form.save()
+            request.user.creditworthiness = creditworthinessform
+            messages.success(
+                request, 'Changes saved!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = CreditworthinessForm(request.user.creditworthiness)
+    return render(request, 'users/creditworthiness.html', {
         'form': form
     })

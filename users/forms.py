@@ -1,13 +1,7 @@
 from django import forms
-from client.models import CustomUser, City, Address
+from client.models import *
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 import datetime
-
-JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                ('uop', 'Umowa o prace na czas okreslony'),
-                ('uod', 'Umowa o dzielo'),
-                ('uz', 'Umowa Zlecenie'),
-                ('ua', 'Umowa Agencyjna')]
 
 
 class UserRegisterForm(UserCreationForm):
@@ -45,27 +39,36 @@ class AddressForm(forms.ModelForm):
         fields = ['street', 'house_nr', 'apartment_nr']
 
 
-class Request(forms.ModelForm):
+class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
-        fields = ['request_text', 'type']
+        fields = ['request_text', 'request_type']
 
 
-class Card(forms.ModelForm):
+class CardForm(forms.ModelForm):
     class Meta:
         model = Card
-        fields = ['transaction_limit', 'if_nfc']
+        fields = ['transaction_limit', 'is_nfc']
 
 
-class Creditworthiness(forms.ModelForm):
+class CreditworthinessForm(forms.ModelForm):
+    JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
+                    ('uop', 'Umowa o prace na czas okreslony'),
+                    ('uod', 'Umowa o dzielo'),
+                    ('uz', 'Umowa Zlecenie'),
+                    ('ua', 'Umowa Agencyjna')]
+    contract_type = models.CharField(
+        max_length=5,
+        choices=JOBE_TYPE_CW,
+        blank=True
+    )
+
     class Meta:
         model = Creditworthiness
-        fields = ['earnings_pre_month', 'working_time', 'contract_type']
-        contract_type = forms.CharField(label='Rodzaj umowy',
-                                        widget=forms.Select(choices=JOBE_TYPE_CW))
+        fields = ['earnings_per_month', 'working_time', 'contract_type']
 
 
-class TransactionHistory(forms.ModelForm):
+class TransactionHistoryForm(forms.ModelForm):
     class Meta:
         model = TransactionHistory
-        fields = ['Destination', 'Amount', 'Title', 'Address']
+        fields = ['destination_bank_account', 'amount', 'title']
