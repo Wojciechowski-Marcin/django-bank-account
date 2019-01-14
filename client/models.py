@@ -23,8 +23,6 @@ class Address(models.Model):
 
 
 class CustomUser(AbstractUser):
-    first_name = models.CharField(max_length=30, verbose_name='first name'),
-    last_name = models.CharField(max_length=150, verbose_name='last name'),
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
     pesel = models.CharField(max_length=11, unique=True, validators=[RegexValidator(
         regex='^\d{11}$', message='Niewlasciwy PESEL!', code='nomatch')])
