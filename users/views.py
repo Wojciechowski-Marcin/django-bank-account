@@ -89,17 +89,18 @@ def change_password(request):
 def creditworthiness(request):
     if request.method == 'POST':
         form = CreditworthinessForm(
-            request.user.creditworthiness, request.POST)
+            request.POST, instance=request.user.creditworthiness)
         if form.is_valid():
             creditworthinessform = form.save()
             request.user.creditworthiness = creditworthinessform
+            request.user.save()
             messages.success(
                 request, 'Changes saved!')
             return redirect('profile')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
-        form = CreditworthinessForm(request.user.creditworthiness)
+        form = CreditworthinessForm(instance=request.user.creditworthiness)
     return render(request, 'users/creditworthiness.html', {
         'form': form
     })

@@ -3,7 +3,42 @@
 <h1>Account Info</h1>
 <h2>{{ account.account_number }}</h2>
 <h2>Card list</h2>
-
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Card number</th>
+            <th scope="col">Transaction limit</th>
+            <th scope="col">Contactless payments?</th>
+            <th scope="col">Is active?</th>
+        </tr>
+    </thead>
+    {% for card in cards %}
+    <tbody>
+        <tr>
+            <th scope="row">
+                <a class="navbar-link" href="{% url 'account' oid=account.id %}">
+                    {{ card.card_number }}
+                </a>
+            </th>
+            <td>{{ card.transaction_limit }}</td>
+            <td>
+                {% if card.is_nfc == '0' %}
+                Enabled
+                {% else %}
+                Disabled
+                {% endif %}
+            </td>
+            <td>
+                {% if card.is_active == '0' %}
+                True
+                {% else %}
+                False
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <div class="form-group">
     <a href="{% url 'transaction_history' oid=account.id %}" class="btn btn-default" type="button">
         Transaction history

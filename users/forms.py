@@ -46,19 +46,30 @@ class RequestForm(forms.ModelForm):
 
 
 class CardForm(forms.ModelForm):
+    CARD_CHOICES = [
+        ('True', 'True'),
+        ('False', 'False')
+    ]
+    is_nfc = models.CharField(
+        max_length=5,
+        choices=CARD_CHOICES,
+        blank=True
+    )
+
     class Meta:
         model = Card
         fields = ['transaction_limit', 'is_nfc']
 
 
 class CreditworthinessForm(forms.ModelForm):
-    JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                    ('uop', 'Umowa o prace na czas okreslony'),
-                    ('uod', 'Umowa o dzielo'),
-                    ('uz', 'Umowa Zlecenie'),
-                    ('ua', 'Umowa Agencyjna')]
+    JOBE_TYPE_CW = [('Umowa o prace na czas nieokreslony', 'Umowa o prace na czas nieokreslony'),
+                    ('Umowa o prace na czas okreslony',
+                     'Umowa o prace na czas okreslony'),
+                    ('Umowa o dzielo', 'Umowa o dzielo'),
+                    ('Umowa Zlecenie', 'Umowa Zlecenie'),
+                    ('Umowa Agencyjna', 'Umowa Agencyjna')]
     contract_type = models.CharField(
-        max_length=5,
+        max_length=35,
         choices=JOBE_TYPE_CW,
         blank=True
     )

@@ -1,4 +1,4 @@
-from client.models import CustomUser, Address, City, Account
+from client.models import *
 
 city1 = City(postal_code='50-370', city='Wrocław')
 city1.save()
@@ -16,3 +16,7 @@ account.save()
 account2 = Account(account_number='12345678912345678912345', user=su,
                    balance=0.40, transaction_limit='10', is_active=True, account_type='2', currency='JPY')
 account2.save()
+
+card = Card(account_number=account, card_number='1234567890123456',
+            cvv='123', is_nfc='0', is_active='1', transaction_limit='123')
+card.save()

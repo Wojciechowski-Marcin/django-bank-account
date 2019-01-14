@@ -59,8 +59,22 @@ def transaction_history(request, oid):
 @login_required
 def order_card(request, oid):
     account = Account.objects.filter(id=oid).first()
+    if request.method == 'POST':
+        form = CardForm(request.POST)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.account_number = account
+            card.save()
+            messages.success(
+                request, 'Card was successfully ordered!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = CardForm()
     context = {
-        'account': account
+        'account': account,
+        'form': form
     }
     return render(request, 'client/order_card.html', context)
 
@@ -77,7 +91,9 @@ def make_transaction(request, oid):
 @login_required
 def account(request, oid):
     account = Account.objects.filter(id=oid).first()
+    cards = Card.objects.filter(account_number_id=oid)
     context = {
-        'account': account
+        'account': account,
+        'cards': cards
     }
     return render(request, 'client/account.html', context)

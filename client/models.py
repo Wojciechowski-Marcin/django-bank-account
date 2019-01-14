@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
+import random
 
 
 class City(models.Model):
@@ -24,22 +25,16 @@ class Address(models.Model):
 
 
 class Creditworthiness(models.Model):
-    JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                    ('uop', 'Umowa o prace na czas okreslony'),
-                    ('uod', 'Umowa o dzielo'),
-                    ('uz', 'Umowa Zlecenie'),
-                    ('ua', 'Umowa Agencyjna')]
+    JOBE_TYPE_CW = [('Umowa o prace na czas nieokreslony', 'Umowa o prace na czas nieokreslony'),
+                    ('Umowa o prace na czas okreslony',
+                     'Umowa o prace na czas okreslony'),
+                    ('Umowa o dzielo', 'Umowa o dzielo'),
+                    ('Umowa Zlecenie', 'Umowa Zlecenie'),
+                    ('Umowa Agencyjna', 'Umowa Agencyjna')]
     earnings_per_month = models.IntegerField(blank=True, null=True)
     contract_type = models.CharField(
-        blank=True, null=True, max_length=5, choices=JOBE_TYPE_CW)
+        blank=True, null=True, max_length=35, choices=JOBE_TYPE_CW)
     working_time = models.IntegerField(blank=True, null=True)
-
-
-JOBE_TYPE_CW = [('uopnt', 'Umowa o prace na czas nieokreslony'),
-                ('uop', 'Umowa o prace na czas okreslony'),
-                ('uod', 'Umowa o dzielo'),
-                ('uz', 'Umowa Zlecenie'),
-                ('ua', 'Umowa Agencyjna')]
 
 
 class CustomUser(AbstractUser):
@@ -79,20 +74,38 @@ class Account(models.Model):
 
 
 class Card(models.Model):
+
+    def rand_cvv():
+        cvv = str(random.randint(0, 10))
+        cvv += str(random.randint(0, 10))
+        cvv += str(random.randint(0, 10))
+        return cvv
+
+    def rand_card_number():
+        card_nr = -1
+        while not Card.objects.filter(card_number=card_nr):
+            card_nr = str(random.randint(0, 10))
+            for i in range(15):
+                card_nr += str(random.randint(0, 10))
+
+    CARD_CHOICES = [
+        ('True', 'True'),
+        ('False', 'False')
+    ]
+
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
     card_number = models.CharField(max_length=16, primary_key=True, validators=[RegexValidator(
         regex='\d{16}', message='Numer karty powinien skladac sie tylko i wylacznie z 16 cyfr', code='nomatch'
     )])
-    cvv = models.CharField(max_length=3, validators=[RegexValidator(
+    cvv = models.CharField(default=rand_cvv, max_length=3, validators=[RegexValidator(
         regex='\d{3}', message='Number CVV sklada sie z 3 cyfr', code='nomatch'
     )])
-    is_nfc = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='[0,1]{1}', message='Platnosc zblizeniowa musi byc w jednym z dwoch stanow: 1 - aktywna, 0 - nieaktywna', code='nomatch'
-    )])
-    is_active = models.CharField(max_length=1, validators=[RegexValidator(
+    is_nfc = models.CharField(
+        default='False', max_length=5, choices=CARD_CHOICES)
+    is_active = models.CharField(default='1', max_length=1, validators=[RegexValidator(
         regex='[0,1]{1}', message='Karta musi byc w jednym z dwoch stanow: 1(aktywna) 0(nieaktywan', code='nomatch'
     )])
-    transaction_limit = models.CharField(max_length=1, validators=[RegexValidator(
+    transaction_limit = models.CharField(default='50', max_length=5, validators=[RegexValidator(
         regex='[0-9]{1,5}'
     )])
 
@@ -124,8 +137,6 @@ class Request(models.Model):
 
 
 class SavingAccount(models.Model):
-    saving_id = models.CharField(max_length=6, primary_key=True, validators=[
-                                 RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
     interest = models.DecimalField(max_digits=2, decimal_places=2)
     period = models.CharField(max_length=3, validators=[RegexValidator(
@@ -133,8 +144,6 @@ class SavingAccount(models.Model):
 
 
 class CreditAccount(models.Model):
-    credit_id = models.CharField(max_length=6, primary_key=True, validators=[
-                                 RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
     interest2 = models.DecimalField(max_digits=2, decimal_places=2)
     credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
