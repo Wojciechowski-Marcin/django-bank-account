@@ -49,4 +49,9 @@ class Creditworthiness(forms.ModelForm):
         fields = ['earnings_pre_month', 'working_time', 'contract_type']
         contract_type = forms.CharField(label='Rodzaj umowy',
         widget = forms.Select(choices=JOBE_TYPE_CW))
+
+class TransactionHistory(forms.ModelForm):
+    class Meta:
+        model = TransactionHistory
+        fields = ['Destination', 'Amount', 'Title', 'Address']
     
