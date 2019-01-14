@@ -2,11 +2,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
+<<<<<<< HEAD
 << << << < HEAD
 
 == == == =
 >>>>>> > origin/MS
 
+=======
+>>>>>>> origin/JB
 
 class City(models.Model):
     postal_code = models.CharField(max_length=6, validators=[RegexValidator(
@@ -45,6 +48,7 @@ class CustomUser(AbstractUser):
         return self.username
 
 
+<<<<<<< HEAD
 class Creditworthiness(models.Model):
     worthiness_id = models.CharField(max_length=6, primary_key=True)
     earnings_per_month = models.IntegerField(max_length=6)
@@ -112,3 +116,36 @@ class Request(models.Model):
     request_type = models.CharField(max_length=1, validators=[RegexValidator(
         regex='[0,1]', message='0 bez kategorii, 1 wniosek o kredyt, 2 wniosek o karte kredytowa'
     )])
+=======
+class BankAccount(models.Model):
+    account_number = models.CharField(max_length=26, primary_key=True, validators=[RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_limit = models.CharField(max_length=5, validators=[RegexValidator(regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
+    currency = models.CharField(max_length=3, validators=[RegexValidator(regex='^[A-Z]{3}$', message='Bledna waluta', code='nomatch')])
+    is_active = models.CharField(max_length=1, validators=[RegexValidator(regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+    creation_date = models.DateTimeField(default=timezone.now)
+    account_type = models.CharField(max_length=1, validators=[RegexValidator(regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+
+class SavingAccount(models.Model):
+    saving_id = models.CharField(max_length=6, primary_key=True, validators=[RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
+    account_number = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
+    interest = models.DecimalField(max_digits=2, decimal_places=2)
+    period = models.CharField(max_length=3, validators=[RegexValidator(regex='^\d{3}$', message='Bledny okres', code='nomatch')])
+
+class CreditAccount(models.Model):
+    credit_id = models.CharField(max_length=6, primary_key=True, validators=[RegexValidator(regex='^\d{6}$', message='Bledna wartosc', code='nomatch')])
+    account_number = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
+    interest2 = models.DecimalField(max_digits=2, decimal_places=2)
+    credit_limit = models.CharField(max_length=7, validators=[RegexValidator(regex='^\d{7}$', message='Bledna wartosc', code='nomatch')])
+
+
+
+
+"""
+class Creditworthiness:
+    earnings =
+    contract_type =
+    working_time =
+"""
+>>>>>>> origin/JB
