@@ -40,7 +40,6 @@ def profile(request):
 
 @login_required
 def edit_profile(request):
-
     if request.method == 'POST':
         formA = UserEditForm(request.POST, instance=request.user)
         formB = CityForm(request.POST, instance=request.user.address.city)
@@ -63,7 +62,7 @@ def edit_profile(request):
         formA = UserEditForm(instance=request.user)
         formB = CityForm(instance=request.user.address.city)
         formC = AddressForm(instance=request.user.address)
-    return render(request, 'users/register.html', {'formA': formA, 'formB': formB, 'formC': formC})
+    return render(request, 'users/edit_profile.html', {'formA': formA, 'formB': formB, 'formC': formC})
 
 
 @login_required

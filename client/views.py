@@ -63,8 +63,15 @@ def open_saving_account(request):
 @login_required
 def transaction_history(request, oid):
     account = Account.objects.filter(id=oid).first()
+    transaction = TransactionHistory.objects.filter(
+        destination_bank_account=account)
+    transaction2 = TransactionHistory.objects.filter(
+        source_bank_account=account)
+    transactions = list(transaction) + list(transaction2)
+    transactions.sort(key=lambda t: t.send_date)
     context = {
-        'account': account
+        'account': account,
+        'transactions': transactions
     }
     return render(request, 'client/transaction_history.html', context)
 
@@ -110,3 +117,14 @@ def account(request, oid):
         'cards': cards
     }
     return render(request, 'client/account.html', context)
+
+
+@login_required
+def card(request, oid, coid):
+    account = Account.objects.filter(id=oid).first()
+    card = Card.objects.filter(id=coid).first()
+    context = {
+        'account': account,
+        'card': card
+    }
+    return render(request, 'client/card.html', context)

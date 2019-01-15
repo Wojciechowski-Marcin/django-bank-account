@@ -53,7 +53,8 @@ class CardForm(forms.ModelForm):
     is_nfc = models.CharField(
         max_length=5,
         choices=CARD_CHOICES,
-        blank=True
+        blank=True,
+        verbose_name='Enable contactless payments?'
     )
 
     class Meta:
@@ -71,7 +72,8 @@ class CreditworthinessForm(forms.ModelForm):
     contract_type = models.CharField(
         max_length=35,
         choices=JOBE_TYPE_CW,
-        blank=True
+        blank=True,
+        verbose_name='Contract type'
     )
 
     class Meta:

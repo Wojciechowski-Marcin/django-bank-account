@@ -74,14 +74,15 @@ class Account(models.Model):
         RegexValidator(regex='^\d{26}$', message='Bledny numer rachunku', code='nomatch')])
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
-    transaction_limit = models.CharField(default=0, max_length=5, validators=[RegexValidator(
+    transaction_limit = models.CharField(default='50', max_length=5, validators=[RegexValidator(
         regex='^[0-9]$', message='Bledny limit transakcji', code='nomatch')])
-    currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICE)
+    currency = models.CharField(
+        default='PLN', max_length=3, choices=CURRENCIES_CHOICE)
     is_active = models.CharField(default='1', max_length=1, validators=[RegexValidator(
-        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+        regex='^[0-1]{1}$', message='Bledna wartosc', code='nomatch')])
     creation_date = models.DateTimeField(default=timezone.now)
     account_type = models.CharField(max_length=1, validators=[RegexValidator(
-        regex='^[0,1]{1}$', message='Bledna wartosc', code='nomatch')])
+        regex='^[0-2]{1}$', message='Bledna wartosc', code='nomatch')])
 
 
 class Card(models.Model):
@@ -93,11 +94,10 @@ class Card(models.Model):
         return cvv
 
     def rand_card_number():
-        card_nr = -1
-        while not Card.objects.filter(card_number=card_nr):
-            card_nr = str(random.randint(0, 10))
-            for i in range(15):
-                card_nr += str(random.randint(0, 10))
+        card_nr = str(random.randint(0, 10))
+        for i in range(15):
+            card_nr += str(random.randint(0, 10))
+        return card_nr
 
     CARD_CHOICES = [
         ('True', 'True'),
@@ -105,7 +105,7 @@ class Card(models.Model):
     ]
 
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
-    card_number = models.CharField(max_length=16, primary_key=True, validators=[RegexValidator(
+    card_number = models.CharField(default=rand_card_number, max_length=16, validators=[RegexValidator(
         regex='\d{16}', message='Numer karty powinien skladac sie tylko i wylacznie z 16 cyfr', code='nomatch'
     )])
     cvv = models.CharField(default=rand_cvv, max_length=3, validators=[RegexValidator(
@@ -126,7 +126,6 @@ class TransactionHistory(models.Model):
         Account, on_delete=models.PROTECT, related_name='source_bank_account')
     destination_bank_account = models.ForeignKey(
         Account, on_delete=models.PROTECT, related_name='destination_bank_account')
-    transaction_id = models.CharField(max_length=9, primary_key=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     title = models.CharField(max_length=20)
     send_date = models.DateTimeField(default=timezone.now)
@@ -151,11 +150,11 @@ class SavingAccount(models.Model):
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
     interest = models.DecimalField(max_digits=2, decimal_places=2)
     period = models.CharField(max_length=3, validators=[RegexValidator(
-        regex='^\d{3}$', message='Bledny okres', code='nomatch')])
+        regex='^\d{0,3}$', message='Bledny okres', code='nomatch')])
 
 
 class CreditAccount(models.Model):
     account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
     interest = models.DecimalField(max_digits=2, decimal_places=2)
     credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
-        regex='^\d{7}$', message='Bledna wartosc', code='nomatch')])
+        regex='^\d{0,7}$', message='Bledna wartosc', code='nomatch')])

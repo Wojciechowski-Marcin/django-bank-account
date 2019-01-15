@@ -1,7 +1,52 @@
 {% extends "client/base.html" %}
 {% block content %}
 <h1>Account Info</h1>
-<h2>{{ account.account_number }}</h2>
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="col">Account number</th>
+            <td>{{ account.account_number }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Balance</th>
+            <td>{{ account.balance }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Currency</th>
+            <td>{{ account.currency }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Account type</th>
+            <td>
+                {% if account.account_type == '0' %}
+                Normal account
+                {% elif account.account_type == '1' %}
+                Saving account
+                {% else %}
+                Credit account
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Transaction limit</th>
+            <td>{{ account.transaction_limit }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Is active?</th>
+            <td>
+                {% if account.is_active == 1 %}
+                True
+                {% else %}
+                False
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Creation date</th>
+            <td>{{ account.creation_date }}</td>
+        </tr>
+    </tbody>
+</table>
 <h2>Card list</h2>
 <table class="table">
     <thead>
@@ -16,7 +61,7 @@
     <tbody>
         <tr>
             <th scope="row">
-                <a class="navbar-link" href="{% url 'account' oid=account.id %}">
+                <a class="navbar-link" href="{% url 'card' oid=account.id coid=card.id %}">
                     {{ card.card_number }}
                 </a>
             </th>

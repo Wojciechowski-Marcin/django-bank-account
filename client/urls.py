@@ -29,4 +29,7 @@ urlpatterns = [
     re_path(r'^account/(?P<oid>[0-9]+)/order_card$',
             client_views.order_card,
             name='order_card'),
+    re_path(r'^account/(?P<oid>[0-9]+)/card/(?P<coid>[0-9]+)$',
+            client_views.card,
+            name='card'),
 ]

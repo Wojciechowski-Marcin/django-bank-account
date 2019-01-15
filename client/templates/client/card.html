@@ -1,0 +1,44 @@
+{% extends "client/base.html" %}
+{% block content %}
+<h1>Card Info</h1>
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="col">Card number</th>
+            <td>{{ card.card_number }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Account number</th>
+            <td>{{ card.account_number.account_number }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Card validation value</th>
+            <td>{{ card.cvv }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Contacless payments?</th>
+            <td>
+                {% if card.is_nfc == '0' %}
+                False
+                {% else %}
+                True
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Is active?</th>
+            <td>
+                {% if card.is_active == 1 %}
+                True
+                {% else %}
+                False
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Transaction limit</th>
+            <td>{{ card.transaction_limit }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

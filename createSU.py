@@ -20,3 +20,7 @@ account2.save()
 card = Card(account_number=account, card_number='1234567890123456',
             cvv='123', is_nfc='0', is_active='1', transaction_limit='123')
 card.save()
+
+transaction = TransactionHistory(
+    source_bank_account=account, destination_bank_account=account2, title='tytul', amount=10.40)
+transaction.save()
