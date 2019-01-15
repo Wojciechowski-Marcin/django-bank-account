@@ -81,8 +81,17 @@
     </tbody>
 </table>
 <div class="form-group">
-    <a href="{% url 'edit_profile' %}" class="btn btn-default" type="submit">Edit profile</a>
-    <a href="{% url 'change_password' %}" class="btn btn-default" type="submit">Change password</a>
-    <a href="{% url 'creditworthiness' %}" class="btn btn-default" type="submit">Enter working data</a>
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary" type="submit">
+        Edit profile
+    </a>
+    <a href="{% url 'change_password' %}" class="btn btn-primary" type="submit">
+        Change password
+    </a>
+    <a href="{% url 'creditworthiness' %}" class="btn btn-primary" type="submit">
+        Enter working data
+    </a>
+    <a href="{% url 'delete_user' %}" class="btn btn-danger" type="button">
+        Delete user
+    </a>
 </div>
 {% endblock content %}

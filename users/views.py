@@ -6,6 +6,17 @@ from client.models import City
 from .forms import *
 
 
+@login_required
+def delete_user(request):
+    if request.method == 'POST':
+        request.user.is_active = False
+        request.user.save()
+        messages.success(request, 'Successfully deleted account!')
+        return redirect('home')
+    else:
+        return render(request, "users/confirm-delete.html")
+
+
 def register(request):
     if request.method == 'POST':
         formA = UserRegisterForm(request.POST)

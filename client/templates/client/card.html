@@ -17,23 +17,11 @@
         </tr>
         <tr>
             <th scope="row">Contacless payments?</th>
-            <td>
-                {% if card.is_nfc == '0' %}
-                False
-                {% else %}
-                True
-                {% endif %}
-            </td>
+            <td>{{ card.is_nfc }}</td>
         </tr>
         <tr>
             <th scope="row">Is active?</th>
-            <td>
-                {% if card.is_active == 1 %}
-                True
-                {% else %}
-                False
-                {% endif %}
-            </td>
+            <td>{{ card.is_active }}</td>
         </tr>
         <tr>
             <th scope="row">Transaction limit</th>
@@ -41,4 +29,15 @@
         </tr>
     </tbody>
 </table>
+<div class="form-group">
+    <a href="{% url 'account' oid=account.id %}" class="btn btn-info" type="button">
+        Back
+    </a>
+    <a href="{% url 'edit_card' oid=account.id coid=card.id %}" class="btn btn-primary" type="button">
+        Edit card
+    </a>
+    <a href="{% url 'delete_card' oid=account.id coid=card.id %}" class="btn btn-danger" type="button">
+        Delete card
+    </a>
+</div>
 {% endblock %}

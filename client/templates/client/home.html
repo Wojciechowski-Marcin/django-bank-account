@@ -11,6 +11,7 @@
         </tr>
     </thead>
     {% for account in accounts %}
+    {% if account.is_active %}
     <tbody>
         <tr>
             <th scope="row">
@@ -20,29 +21,28 @@
             </th>
             <td>{{ account.balance }}</td>
             <td>{{ account.currency }}</td>
-            <td>
-                {% if account.account_type == '0' %}
-                Normal account
-                {% elif account.account_type == '1' %}
-                Saving account
-                {% else %}
-                Credit account
-                {% endif %}
-            </td>
+            <td>{{ account.account_type }}</td>
         </tr>
-        {% endfor %}
+    {% endif %}
+    {% endfor %}
     </tbody>
 </table>
-{% if accounts|length < 5 %} <div class="form-group">
-    <a href="{% url 'open_account' %}" class="btn btn-default" type="button">
+<div class="form-group">
+    <a href="{% url 'make_transaction' %}" class="btn btn-primary" type="button">
+        Make transaction
+    </a>
+{% if accounts|length < 5 %} 
+    <a href="{% url 'open_account' %}" class="btn btn-primary" type="button">
         Open account
     </a>
-    <a href="{% url 'open_saving_account' %}" class="btn btn-default" type="button">
-        Open saving account
+    <a href="{% url 'open_credit_account' %}" class="btn btn-primary" type="button">
+        Request credit
     </a>
-    <a href="{% url 'open_credit_account' %}" class="btn btn-default" type="button">
-        Request credit account
+    <a href="{% url 'request_credit_card' %}" class="btn btn-primary" type="button">
+        Request credit card
     </a>
-    </div>
-    {% endif %}
-    {% endblock %}
+{% else %}
+    Account limit reached.
+{% endif %}
+</div>
+{% endblock %}

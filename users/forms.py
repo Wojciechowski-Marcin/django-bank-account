@@ -42,44 +42,22 @@ class AddressForm(forms.ModelForm):
 class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
-        fields = ['request_text']
+        fields = ['request_title', 'request_text']
 
 
 class CardForm(forms.ModelForm):
-    CARD_CHOICES = [
-        ('True', 'True'),
-        ('False', 'False')
-    ]
-    is_nfc = models.CharField(
-        max_length=5,
-        choices=CARD_CHOICES,
-        blank=True,
-        verbose_name='Enable contactless payments?'
-    )
-
     class Meta:
         model = Card
         fields = ['transaction_limit', 'is_nfc']
+
 
 class EditCardForm(forms.ModelForm):
     class Meta:
         model = Card
         fields = ['transaction_limit', 'is_nfc', 'is_active']
 
-class CreditworthinessForm(forms.ModelForm):
-    JOBE_TYPE_CW = [('Umowa o prace na czas nieokreslony', 'Umowa o prace na czas nieokreslony'),
-                    ('Umowa o prace na czas okreslony',
-                     'Umowa o prace na czas okreslony'),
-                    ('Umowa o dzielo', 'Umowa o dzielo'),
-                    ('Umowa Zlecenie', 'Umowa Zlecenie'),
-                    ('Umowa Agencyjna', 'Umowa Agencyjna')]
-    contract_type = models.CharField(
-        max_length=35,
-        choices=JOBE_TYPE_CW,
-        blank=True,
-        verbose_name='Contract type'
-    )
 
+class CreditworthinessForm(forms.ModelForm):
     class Meta:
         model = Creditworthiness
         fields = ['earnings_per_month', 'working_time', 'contract_type']
@@ -88,30 +66,15 @@ class CreditworthinessForm(forms.ModelForm):
 class TransactionHistoryForm(forms.ModelForm):
     class Meta:
         model = TransactionHistory
-        fields = ['destination_bank_account', 'amount', 'title']
+        fields = ['source_bank_account',
+                  'destination_bank_account_number', 'amount', 'title']
 
 
 class AccountForm(forms.ModelForm):
-    CURRENCIES_CHOICE = [
-        ('EUR', 'EUR'),
-        ('PLN', 'PLN'),
-        ('USD', 'USD'),
-        ('JPY', 'JPY'),
-        ('GBP', 'GBP'),
-        ('CHF', 'CHF'),
-        ('SAR', 'SAR'),
-        ('RUB', 'RUB'),
-        ('KRW', 'KRW')
-    ]
-    currency = models.CharField(
-        max_length=3,
-        choices=CURRENCIES_CHOICE,
-        blank=True
-    )
-
     class Meta:
         model = Account
-        fields = ['transaction_limit', 'currency']
+        fields = ['transaction_limit', 'currency', 'account_type']
+
 
 class AccountEditForm(forms.ModelForm):
     class Meta:
@@ -120,13 +83,8 @@ class AccountEditForm(forms.ModelForm):
             'transaction_limit', 'is_active',
         ]
 
-class SavingAccountForm(forms.ModelForm):
-    class Meta:
-        model = SavingAccount
-        fields = ['period']
 
-
-class CreditAccountForm(forms.ModelForm):
+class RequestCreditForm(forms.ModelForm):
     class Meta:
-        model = CreditAccount
-        fields = ['credit_limit']
+        model = Request
+        fields = ['request_text', 'credit_account_number', 'credit_amount']

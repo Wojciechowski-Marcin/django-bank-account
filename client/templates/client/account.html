@@ -66,33 +66,29 @@
                 </a>
             </th>
             <td>{{ card.transaction_limit }}</td>
-            <td>
-                {% if card.is_nfc == '0' %}
-                Enabled
-                {% else %}
-                Disabled
-                {% endif %}
-            </td>
-            <td>
-                {% if card.is_active == '0' %}
-                True
-                {% else %}
-                False
-                {% endif %}
-            </td>
+            <td>{{ card.is_nfc }}</td>
+            <td>{{ card.is_active }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 <div class="form-group">
-    <a href="{% url 'transaction_history' oid=account.id %}" class="btn btn-default" type="button">
+    <a href="{% url 'home' %}" class="btn btn-info" type="button">
+        Back
+    </a>
+    <a href="{% url 'edit_account' oid=account.id %}" class="btn btn-primary" type="button">
+        Account settings
+    </a>
+    <a href="{% url 'transaction_history' oid=account.id %}" class="btn btn-primary" type="button">
         Transaction history
     </a>
-    <a href="{% url 'make_transaction' oid=account.id %}" class="btn btn-default" type="button">
-        Make transaction
-    </a>
-    <a href="{% url 'order_card' oid=account.id %}" class="btn btn-default" type="button">
+    <a href="{% url 'order_card' oid=account.id %}" class="btn btn-primary" type="button">
         Order card
     </a>
+    {% if account_balance >= 0 %}
+    <a href="{% url 'delete_account' oid=account.id %}" class="btn btn-danger" type="button">
+        Delete account
+    </a>
+    {% endif %}
 </div>
 {% endblock %}
