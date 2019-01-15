@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -41,7 +41,7 @@ def delete_card(request, oid, coid):
 
 @login_required
 def home(request):
-    accounts = get_list_or_404(Account, user=request.user, is_active=True)
+    accounts = Account.objects.filter(user=request.user, is_active=True)
     context = {
         'accounts': accounts
     }
@@ -73,7 +73,7 @@ def send_request(request):
 
 @login_required
 def my_requests(request):
-    requests = get_list_or_404(Request, client_data=request.user)
+    requests = Request.objects.filter(client_data=request.user)
     requests.reverse()
     context = {
         'requests': requests
@@ -160,8 +160,8 @@ def open_credit_account(request):
     else:
         form = CreditworthinessForm(instance=request.user.creditworthiness)
         formB = RequestCreditForm()
-        accounts = get_list_or_404(
-            Account, user=request.user, is_active=True, currency='PLN')
+        accounts = Account.objects.filter(
+            user=request.user, is_active=True, currency='PLN')
         formB.fields['credit_account_number'].queryset = accounts
     context = {
         'form': form,
@@ -208,10 +208,10 @@ def request_credit_card(request):
 def transaction_history(request, oid):
     account = get_object_or_404(Account, id=oid)
     if account.user == request.user:
-        transaction = get_list_or_404(TransactionHistory,
-                                      destination_bank_account_number=account.account_number)
-        transaction2 = get_list_or_404(TransactionHistory,
-                                       source_bank_account=account)
+        transaction = TransactionHistory.objects.filter(
+            destination_bank_account_number=account.account_number)
+        transaction2 = TransactionHistory.objects.filter(
+            source_bank_account=account)
         transactions = list(transaction) + list(transaction2)
         transactions.sort(key=lambda t: t.send_date)
         context = {
@@ -254,7 +254,7 @@ def account(request, oid):
     account = get_object_or_404(Account, id=oid)
     if account.user == request.user:
         if account.user == request.user:
-            cards = get_list_or_404(Card, account_number_id=oid)
+            cards = Card.objects.filter(account_number_id=oid)
             context = {
                 'account': account,
                 'cards': cards
@@ -301,7 +301,7 @@ def edit_card(request, oid, coid):
 
 @login_required
 def make_transaction(request):
-    accounts = get_list_or_404(Account, is_active=True)
+    accounts = Account.objects.filter(is_active=True)
     if request.method == 'POST':
         form = TransactionHistoryForm(request.POST)
         dst_account = Account.objects.filter(
