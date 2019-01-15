@@ -60,7 +60,7 @@ def request_confirm(request, rid):
         user_request.is_verified = True
         user_request.worker_data = request.user
         user_request.save()
-        messages.success(request, 'Successfully deleted account!')
+        messages.success(request, 'Request accepted!')
         return redirect('home')
     context = {
         'user_request': user_request,

@@ -92,28 +92,26 @@ def user_request_details(request, rid):
 
 @login_required
 def open_account(request):
-    if account.user == request.user:
-        if request.method == 'POST':
-            form = AccountForm(request.POST)
-            if form.is_valid():
-                accountform = form.save(commit=False)
-                accountform.user = request.user
-                accountform.save()
-                messages.success(
-                    request, 'Account was successfully opened!')
-                return redirect('home')
-            else:
-                messages.error(
-                    request, 'Something went wrong. Please, correct mistakes.')
+    if request.method == 'POST':
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            accountform = form.save(commit=False)
+            accountform.user = request.user
+            accountform.save()
+            messages.success(
+                request, 'Account was successfully opened!')
+            return redirect('home')
         else:
-            form = AccountForm()
-        context = {
-            'form': form,
-            'title': "Open account",
-            'button_name': "Sumbit"
-        }
-        return render(request, 'client/form.html', context)
-    return render(request, "users/validation_error.html")
+            messages.error(
+                request, 'Something went wrong. Please, correct mistakes.')
+    else:
+        form = AccountForm()
+    context = {
+        'form': form,
+        'title': "Open account",
+        'button_name': "Submit"
+    }
+    return render(request, 'client/form.html', context)
 
 
 @login_required
@@ -167,7 +165,7 @@ def open_credit_account(request):
         'form': form,
         'formB': formB,
         'title': "Request credit",
-        'button_name': "Sumbit"
+        'button_name': "Submit"
     }
     return render(request, 'client/form.html', context)
 
@@ -199,7 +197,7 @@ def request_credit_card(request):
         'form': form,
         'formB': formB,
         'title': "Request credit card",
-        'button_name': "Sumbit"
+        'button_name': "Submit"
     }
     return render(request, 'client/form.html', context)
 
@@ -243,7 +241,7 @@ def order_card(request, oid):
             'account': account,
             'form': form,
             'title': "Order account card",
-            'button_name': "Sumbit"
+            'button_name': "Submit"
         }
         return render(request, 'client/form.html', context)
     return render(request, "users/validation_error.html")

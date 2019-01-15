@@ -135,8 +135,8 @@ def set_balance(sender, instance, **kwargs):
     from decimal import Decimal
     instance.source_bank_account.balance -= instance.amount
     instance.source_bank_account.save()
-    dst_acc = Account.objects.filter(
-        account_number=instance.destination_bank_account_number).first()
+    dst_acc = Account.objects.get(
+        account_number=instance.destination_bank_account_number)
     dst_acc.balance += Decimal(instance.amount)
     dst_acc.save()
 
