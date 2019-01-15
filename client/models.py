@@ -86,7 +86,6 @@ class Account(models.Model):
 
 
 class Card(models.Model):
-
     def rand_cvv():
         cvv = str(random.randint(0, 10))
         cvv += str(random.randint(0, 10))

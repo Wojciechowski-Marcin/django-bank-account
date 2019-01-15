@@ -42,7 +42,7 @@ class AddressForm(forms.ModelForm):
 class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
-        fields = ['request_text', 'request_type']
+        fields = ['request_text']
 
 
 class CardForm(forms.ModelForm):
@@ -61,6 +61,10 @@ class CardForm(forms.ModelForm):
         model = Card
         fields = ['transaction_limit', 'is_nfc']
 
+class EditCardForm(forms.ModelForm):
+    class Meta:
+        model = Card
+        fields = ['transaction_limit', 'is_nfc', 'is_active']
 
 class CreditworthinessForm(forms.ModelForm):
     JOBE_TYPE_CW = [('Umowa o prace na czas nieokreslony', 'Umowa o prace na czas nieokreslony'),
@@ -109,6 +113,12 @@ class AccountForm(forms.ModelForm):
         model = Account
         fields = ['transaction_limit', 'currency']
 
+class AccountEditForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = [
+            'transaction_limit', 'is_active',
+        ]
 
 class SavingAccountForm(forms.ModelForm):
     class Meta:
@@ -116,7 +126,7 @@ class SavingAccountForm(forms.ModelForm):
         fields = ['period']
 
 
-class CreditAccount(forms.ModelForm):
+class CreditAccountForm(forms.ModelForm):
     class Meta:
         model = CreditAccount
         fields = ['credit_limit']

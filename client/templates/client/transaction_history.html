@@ -17,9 +17,9 @@
             <td>{{ transaction.source_bank_account.account_number }}</td>
             <td>{{ transaction.destination_bank_account.account_number }}</td>
             {% if account.account_number == transaction.destination_bank_account.account_number %}
-            <td>-{{ transaction.amount }}</td>
-            {% else %}
             <td>{{ transaction.amount }}</td>
+            {% else %}
+            <td>-{{ transaction.amount }}</td>
             {% endif %}
             <td>{{ transaction.title }}</td>
             <td>{{ transaction.date }}</td>

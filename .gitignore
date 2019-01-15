@@ -1,2 +1,6 @@
-*/migrations/*.pyc
-*/migrations/*.py
+**/__pycache__/
+**/migrations/
+db.sqlite3
+logs.log
+.vscode
+TODO

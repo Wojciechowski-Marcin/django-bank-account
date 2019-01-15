@@ -38,26 +38,76 @@ def open_account(request):
         form = AccountForm(request.POST)
         if form.is_valid():
             accountform = form.save(commit=False)
-            accountform.transact
+            accountform.user = request.user
             accountform.save()
             messages.success(
-                request, 'Request was successfully sent!')
+                request, 'Account was successfully opened!')
             return redirect('home')
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(
+                request, 'Something went wrong. Please, correct mistakes.')
     else:
-        form = RequestForm()
+        form = AccountForm()
     return render(request, 'client/open_account.html')
 
 
 @login_required
 def open_credit_account(request):
-    return render(request, 'client/open_credit_account.html')
+    if request.method == 'POST':
+        form = CreditAccountForm(request.POST)
+        super_account_form = AccountForm(request.POST)
+        tmp = request.POST.get('account_number')
+        if form.is_valid() and super_account_form.is_valid():
+            c = form.save(commit=False)
+            s = super_account_form.save(commit=False)
+            s.user = request.user
+            s.account_type = '2'
+            s.save()
+            c.account_number = s
+            c.save()
+            messages.success(
+                request, 'Credit Account was successfully opened!')
+            return redirect('home')
+        else:
+            messages.error(
+                request, 'Something went wrong. Please, correct mistakes.')
+    else:
+        form = CreditAccountForm()
+        super_account_form = AccountForm()
+    context = {
+        'form': form,
+        'super_account_form': super_account_form
+    }
+    return render(request, 'client/open_credit_account.html', context)
 
 
 @login_required
 def open_saving_account(request):
-    return render(request, 'client/open_saving_account.html')
+    if request.method == 'POST':
+        form = SavingAccountForm(request.POST)
+        super_account_form = AccountForm(request.POST)
+        if form.is_valid() and super_account_form.is_valid():
+            c = form.save(commit=False)
+            s = super_account_form.save(commit=False)
+            s.user = request.user
+            s.account_type = '1'
+            s.save()
+            c.account_number = s
+            c.save()
+            messages.success(
+                request, 'Saving Account was successfully opened!')
+            return redirect('home')
+        else:
+            messages.error(
+                request, 'Something went wrong. Please, correct mistakes.')
+    else:
+        form = SavingAccountForm()
+        super_account_form = AccountForm()
+    context = {
+        'form': form,
+        'super_account_form': super_account_form
+    }
+    return render(request, 'client/open_saving_account.html', context)
 
 
 @login_required
@@ -128,3 +178,41 @@ def card(request, oid, coid):
         'card': card
     }
     return render(request, 'client/card.html', context)
+
+
+@login_required
+def edit_card(request, oid, coid):
+    card = Card.objects.filter(id=coid).first()
+    if request.method == 'POST':
+        formA = EditCardForm(request.POST, instance=card)
+
+        if formA.is_valid():
+            a = formA.save()
+            messages.success(
+                request, 'Successfully changed your card settings!')
+            return redirect('home')
+    else:
+        formA = EditCardForm(instance=request.card)
+    context = {
+        'form': formA
+    }
+    return render(request, 'client/edit_card.html', context)
+
+
+@login_required
+def edit_account(request, oid):
+    account = Account.object.filter(id=oid).first()
+    if request.method == 'POST':
+        formA = AccountEditForm(request.POST, instance=account)
+
+        if formA.is_valid():
+            a = formA.save()
+            messages.success(
+                request, 'Successfully changed your account settings!')
+            return redirect('home')
+    else:
+        formA = AccountEditForm(instance=request.account)
+    context = {
+        'form': formA
+    }
+    return render(request, 'client/edit_account.html', context)

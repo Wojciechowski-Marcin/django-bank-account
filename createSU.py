@@ -9,11 +9,11 @@ su = CustomUser.objects.create_superuser(password='testing321', username='Wojcie
 
                                          email='wojc.marcin@gmail.com', pesel=1234567891, telephone=123456789, address=address1, birth_day='2000-11-11 11:11')
 su.save()
-account = Account(account_number='11111111111111111111111', user=su,
+account = Account(account_number='11111111111111111111111111', user=su,
                   balance=100.40, transaction_limit='10', is_active=True, account_type='1', currency='PLN')
 account.save()
 
-account2 = Account(account_number='12345678912345678912345', user=su,
+account2 = Account(account_number='12345678912345678912311145', user=su,
                    balance=0.40, transaction_limit='10', is_active=True, account_type='2', currency='JPY')
 account2.save()
 
