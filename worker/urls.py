@@ -14,4 +14,10 @@ urlpatterns = [
     re_path(r'^request/confirm/(?P<rid>[0-9]+)/$',
             worker_views.request_confirm,
             name='request_confirm'),
+    re_path(r'^request/decline/(?P<rid>[0-9]+)/$',
+            worker_views.request_decline,
+            name='request_decline'),
+    re_path(r'^request/verify/(?P<rid>[0-9]+)/$',
+            worker_views.request_verify,
+            name='request_verify'),
 ]

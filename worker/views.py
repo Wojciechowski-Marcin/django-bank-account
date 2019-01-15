@@ -57,12 +57,44 @@ def request_confirm(request, rid):
             credit_account = CreditAccount.objects.create(
                 account_number=account, interest=0.5, credit_limit=500)
             card = Card.objects.create(account_number=account)
+        user_request.is_accepted = True
         user_request.is_verified = True
         user_request.worker_data = request.user
         user_request.save()
-        messages.success(request, 'Request accepted!')
-        return redirect('home')
+        messages.info(request, 'Request accepted.')
+        return redirect('worker_home', rot=0)
     context = {
         'user_request': user_request,
     }
     return render(request, "worker/request_confirm.html", context)
+
+
+@staff_member_required
+def request_decline(request, rid):
+    user_request = get_object_or_404(Request, id=rid)
+    if request.method == 'POST':
+        user_request.is_accepted = False
+        user_request.is_verified = True
+        user_request.worker_data = request.user
+        user_request.save()
+        messages.info(request, 'Request decined.')
+        return redirect('worker_home', rot=0)
+    context = {
+        'user_request': user_request,
+    }
+    return render(request, "worker/request_decline.html", context)
+
+
+@staff_member_required
+def request_verify(request, rid):
+    user_request = get_object_or_404(Request, id=rid)
+    if request.method == 'POST':
+        user_request.is_verified = True
+        user_request.worker_data = request.user
+        user_request.save()
+        messages.info(request, 'Request verified.')
+        return redirect('worker_home', rot=0)
+    context = {
+        'user_request': user_request,
+    }
+    return render(request, "worker/request_verify.html", context)

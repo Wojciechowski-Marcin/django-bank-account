@@ -34,13 +34,7 @@
         </tr>
         <tr>
             <th scope="row">Mother's maiden name</th>
-            <td>
-                {% if user.mothers_maiden_name %}
-                {{ user.mothers_maiden_name }}
-                {% else %}
-                Not provided
-                {% endif %}
-            </td>
+            <td>{{ user.mothers_maiden_name|default_if_none:"Not provided" }}</td>
         </tr>
         <tr>
             <th scope="row">Street</th>
@@ -52,7 +46,7 @@
         </tr>
         <tr>
             <th scope="row">Apartment number</th>
-            <td>{{ user.address.apartment_nr }}</td>
+            <td>{{ user.address.apartment_nr|default_if_none:"&nbsp;" }}</td>
         </tr>
         <tr>
             <th scope="row">City</th>

@@ -2,6 +2,12 @@
 
 ## Wymagania
 
+- Python 3.5+
+
+```bash
+sudo apt-get install python3
+```
+
 - Django
 
 ```bash

@@ -17,15 +17,7 @@
         </tr>
         <tr>
             <th scope="row">Account type</th>
-            <td>
-                {% if account.account_type == '0' %}
-                Normal account
-                {% elif account.account_type == '1' %}
-                Saving account
-                {% else %}
-                Credit account
-                {% endif %}
-            </td>
+            <td>{{ account.account_type }}</td>
         </tr>
         <tr>
             <th scope="row">Transaction limit</th>
@@ -33,13 +25,7 @@
         </tr>
         <tr>
             <th scope="row">Is active?</th>
-            <td>
-                {% if account.is_active == 1 %}
-                True
-                {% else %}
-                False
-                {% endif %}
-            </td>
+            <td> {{ account.is_active }} </td>
         </tr>
         <tr>
             <th scope="row">Creation date</th>

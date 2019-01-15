@@ -162,6 +162,7 @@ class Request(models.Model):
         Account, on_delete=models.CASCADE, null=True)
     send_date = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(null=True)
     request_type = models.CharField(
         max_length=20, default='Normal request', choices=REQUEST_TYPES)
 

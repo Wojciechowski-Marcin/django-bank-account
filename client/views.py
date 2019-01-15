@@ -74,7 +74,6 @@ def send_request(request):
 @login_required
 def my_requests(request):
     requests = Request.objects.filter(client_data=request.user)
-    requests.reverse()
     context = {
         'requests': requests
     }
