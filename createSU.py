@@ -13,3 +13,7 @@ card = Card.objects.create(account_number=account)
 
 transaction = TransactionHistory.objects.create(
     source_bank_account=account, destination_bank_account_number=account2.account_number, title='tytul', amount=10.40)
+request = Request.objects.create(
+    client_data=su, request_title="asd", is_verified=True)
+print(Request.objects.all())
+print(VerifiedRequestsView.objects.all())

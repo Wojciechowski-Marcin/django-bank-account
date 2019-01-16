@@ -180,3 +180,24 @@ class CreditAccount(models.Model):
     interest = models.DecimalField(max_digits=2, decimal_places=2)
     credit_limit = models.CharField(max_length=7, validators=[RegexValidator(
         regex='^\d{0,7}$', message='Bledna wartosc', code='nomatch')])
+
+
+class VerifiedRequestsView(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    worker_data = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, related_name='worker_data_view')
+    client_data = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, related_name='client_data_view')
+    request_title = models.CharField(max_length=40)
+    request_text = models.TextField()
+    credit_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    credit_account_number = models.ForeignKey(
+        Account, on_delete=models.DO_NOTHING)
+    send_date = models.DateTimeField()
+    is_verified = models.BooleanField()
+    is_accepted = models.BooleanField()
+    request_type = models.CharField(max_length=20)
+
+    class Meta:
+        managed = False
+        db_table = 'client_verifiedrequests'

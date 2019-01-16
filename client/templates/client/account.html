@@ -71,7 +71,7 @@
     <a href="{% url 'order_card' oid=account.id %}" class="btn btn-primary" type="button">
         Order card
     </a>
-    {% if account_balance >= 0 %}
+    {% if account.balance >= 0 %}
     <a href="{% url 'delete_account' oid=account.id %}" class="btn btn-danger" type="button">
         Delete account
     </a>
